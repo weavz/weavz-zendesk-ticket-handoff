@@ -1,0 +1,143 @@
+{
+  "id": "zendesk-ticket-handoff",
+  "title": "Zendesk Ticket Handoff",
+  "prompt": "Prepare a read-only handoff for the returned open support tickets. Summarize the customer issue, current status, priority, and next information needed, with ticket citations.",
+  "instructions": "Search only the requested ticket page. Read full details and opt-in comments for the selected tickets with get_ticket; do not imply search results include every ticket. Do not add comments, change status, or assign tickets. Treat the fixture customer and ticket details as synthetic, and separate reported symptoms from diagnosis.",
+  "fixture_summary": "Synthetic search returns three open support tickets. Full reads add comments for two, including a reproducible import failure and a missing account detail.",
+  "inputs": {
+    "query": "type:ticket status<solved tag:handoff",
+    "status": "open",
+    "limit": 3
+  },
+  "steps": [
+    {
+      "id": "search_handoff_tickets",
+      "alias": "support",
+      "integration": "zendesk",
+      "action": "search_tickets",
+      "tool": "support__search_tickets",
+      "arguments": {
+        "query": "type:ticket status<solved tag:handoff",
+        "status": "open",
+        "limit": 3
+      },
+      "records": [
+        {
+          "id": "zd-7001",
+          "app": "Zendesk",
+          "title": "CSV import stops at row 80",
+          "detail": "Synthetic ticket: requester reports a CSV import fails after row 80; priority high.",
+          "url": "https://example.com/records/zd-7001",
+          "ticket_id": 7001,
+          "status": "open",
+          "priority": "high",
+          "reproducible": true,
+          "account_detail_missing": false
+        },
+        {
+          "id": "zd-7002",
+          "app": "Zendesk",
+          "title": "Cannot confirm account owner",
+          "detail": "Synthetic ticket: requester cannot identify the current account owner; priority normal.",
+          "url": "https://example.com/records/zd-7002",
+          "ticket_id": 7002,
+          "status": "pending",
+          "priority": "normal",
+          "reproducible": false,
+          "account_detail_missing": true
+        },
+        {
+          "id": "zd-7003",
+          "app": "Zendesk",
+          "title": "Export link expires too soon",
+          "detail": "Synthetic ticket: export link expires before the user finishes download; priority low.",
+          "url": "https://example.com/records/zd-7003",
+          "ticket_id": 7003,
+          "status": "open",
+          "priority": "low",
+          "reproducible": false,
+          "account_detail_missing": false
+        }
+      ]
+    },
+    {
+      "id": "read_import_ticket",
+      "alias": "support",
+      "integration": "zendesk",
+      "action": "get_ticket",
+      "tool": "support__get_ticket",
+      "arguments": {
+        "ticket_id": 7001,
+        "include_comments": true,
+        "comments_limit": 5
+      },
+      "records": [
+        {
+          "id": "zd-7001",
+          "app": "Zendesk",
+          "title": "CSV import stops at row 80",
+          "detail": "Full synthetic ticket and comments: requester reproduced the failure with a 120-row CSV; first error appears at row 81. No file was attached.",
+          "url": "https://example.com/records/zd-7001",
+          "ticket_id": 7001,
+          "status": "open",
+          "priority": "high",
+          "reproducible": true,
+          "account_detail_missing": false,
+          "comments_read": true
+        }
+      ]
+    },
+    {
+      "id": "read_owner_ticket",
+      "alias": "support",
+      "integration": "zendesk",
+      "action": "get_ticket",
+      "tool": "support__get_ticket",
+      "arguments": {
+        "ticket_id": 7002,
+        "include_comments": true,
+        "comments_limit": 5
+      },
+      "records": [
+        {
+          "id": "zd-7002",
+          "app": "Zendesk",
+          "title": "Cannot confirm account owner",
+          "detail": "Full synthetic ticket and comments: requester asks which team owns the workspace. Workspace name and account URL were not provided.",
+          "url": "https://example.com/records/zd-7002",
+          "ticket_id": 7002,
+          "status": "pending",
+          "priority": "normal",
+          "reproducible": false,
+          "account_detail_missing": true,
+          "comments_read": true
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "name": "sampled_open_tickets",
+      "op": "count"
+    },
+    {
+      "name": "high_priority_tickets",
+      "op": "count",
+      "where": {
+        "priority": "high"
+      }
+    },
+    {
+      "name": "tickets_missing_account_details",
+      "op": "count",
+      "where": {
+        "account_detail_missing": true
+      }
+    }
+  ],
+  "expected_metrics": {
+    "sampled_open_tickets": 3,
+    "high_priority_tickets": 1,
+    "tickets_missing_account_details": 1
+  }
+}

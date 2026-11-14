@@ -1,0 +1,12 @@
+[project]
+name = "weavz-python-mcp-fixture"
+version = "0.1.0"
+description = "Local bearer-protected Streamable HTTP MCP fixture for Weavz framework examples"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "mcp==2.3.0",
+  "uvicorn>=0.34,<1",
+]
+
+[tool.uv]
+package = false

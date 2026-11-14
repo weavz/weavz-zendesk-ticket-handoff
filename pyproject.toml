@@ -1,0 +1,13 @@
+[project]
+name = "weavz-zendesk-ticket-handoff"
+version = "0.1.0"
+description = "Zendesk Ticket Handoff through PydanticAI and native MCP"
+requires-python = ">=3.11,<3.14"
+dependencies = ["pydantic-ai-slim[mcp,openai]==2.68.0", "weavz-io-sdk==0.3.1", "pytest>=8,<9"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
