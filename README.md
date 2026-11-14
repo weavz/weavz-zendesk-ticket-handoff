@@ -1,4 +1,18 @@
-# Zendesk Ticket Handoff
+# Zendesk MCP agent with PydanticAI: Zendesk Ticket Handoff
+
+<!-- weavz:discovery:start -->
+
+Use Zendesk with PydanticAI through Weavz MCP. This zendesk ticket handoff example returns a report from bounded app reads with source references.
+
+**Framework:** PydanticAI · **Language:** Python · **MCP modes:** Tool Mode and Code Mode
+
+Use another framework:
+
+- [Zendesk MCP with LangGraph.js TypeScript](https://github.com/weavz/weavz-langgraph-js/blob/main/docs/app-recipes.md#zendesk-mcp-with-langgraphjs-typescript)
+
+[MCP app and framework directory](https://github.com/weavz/mcp-examples/blob/main/docs/integrations.md) · [All examples](https://github.com/weavz/mcp-examples) · [Weavz MCP guide](https://weavz.io/docs/guides/agent-framework-examples)
+
+<!-- weavz:discovery:end -->
 
 Prepare a read-only handoff for the returned open support tickets. Summarize the customer issue, current status, priority, and next information needed, with ticket citations.
 
